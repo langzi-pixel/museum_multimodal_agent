@@ -1,0 +1,22 @@
+{
+  "workflow_name": "文博多模态内容生产与语音讲解 Agent",
+  "version": "1.0.0",
+  "description": "图片/资料包上传后，自动完成文物识别、多风格讲解生成、审核、TTS 和业务回写。",
+  "nodes": [
+    {"id": "upload", "type": "input", "name": "上传文物图片或ZIP资料包"},
+    {"id": "parse", "type": "tool", "name": "资料解析", "output": "artifact_input"},
+    {"id": "recognition_agent", "type": "llm", "name": "识别Agent", "output": "artifact_knowledge"},
+    {"id": "generation_agent", "type": "llm", "name": "多风格生成Agent", "output": "style_texts"},
+    {"id": "review_agent", "type": "llm_or_rule", "name": "审核Agent", "output": "reviewed_texts"},
+    {"id": "tts_agent", "type": "tool", "name": "语音合成Agent", "output": "audio_urls"},
+    {"id": "sync_agent", "type": "http", "name": "业务回写Agent", "output": "sync_response"}
+  ],
+  "edges": [
+    ["upload", "parse"],
+    ["parse", "recognition_agent"],
+    ["recognition_agent", "generation_agent"],
+    ["generation_agent", "review_agent"],
+    ["review_agent", "tts_agent"],
+    ["tts_agent", "sync_agent"]
+  ]
+}
